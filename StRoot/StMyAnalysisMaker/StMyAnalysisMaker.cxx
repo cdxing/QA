@@ -125,11 +125,11 @@ Int_t StMyAnalysisMaker::Init()
   h_test_nsigmapi = new TH1D("h_test_nsigmapi", "", 1000, -50.0, 50.0);
   h_test_nsigmapr = new TH1D("h_test_nsigmapr", "", 1000, -50.0, 50.0);
 
-  h_runidvstofmult_b = new TProfile("runidvstofmult_b", "", 90000, 22031041, 22121041);
-  h_runidvsrefmult_b = new TProfile("runidvsrefmult_b", "", 90000, 22031041, 22121041);
+  h_runidvstofmult_b = new TProfile("runidvstofmult_b", "", 90000, 22031041, 22121041,"");
+  h_runidvsrefmult_b = new TProfile("runidvsrefmult_b", "", 90000, 22031041, 22121041,"");
 
-  h_runidvstofmult = new TProfile("runidvstofmult", "", 90000, 22031041, 22121041);
-  h_runidvsrefmult = new TProfile("runidvsrefmult", "", 90000, 22031041, 22121041);
+  h_runidvstofmult = new TProfile("runidvstofmult", "", 90000, 22031041, 22121041,"");
+  h_runidvsrefmult = new TProfile("runidvsrefmult", "", 90000, 22031041, 22121041,"");
 
   return kStOK;
 }

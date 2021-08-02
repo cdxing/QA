@@ -70,6 +70,9 @@
 
 ClassImp(StMyAnalysisMaker)
 
+//                              0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 , 11 , 12 , 13 , 14
+Float_t StMyAnalysisMaker::p_low[14] = {0.2,0.4,0.6,0.8,1.0,1.2,1.4,1.6,1.8,2.0,2.2,2.4,2.6,2.8};
+Float_t StMyAnalysisMaker::p_up[14]  = {0.4,0.6,0.8,1.0,1.2,1.4,1.6,1.8,2.0,2.2,2.4,2.6,2.8,3.0};
 //-----------------------------------------------------------------------------
 StMyAnalysisMaker::StMyAnalysisMaker(const char* name, StPicoDstMaker *picoMaker, /*const*/ char* outName)
   : StMaker(name)
@@ -110,9 +113,10 @@ Int_t StMyAnalysisMaker::Init()
   h_counter = new TH1F("h_counter","event_counter",58,-8,50.);
 
   h_pt = new TH1F("h_pt","",1000,0.,10.);
+  h_eta_b= new TH1F("h_eta_b","",1000,-2.,2.);
   h_eta= new TH1F("h_eta","",1000,-2.,2.);
-  h_nhitfit=new TH1F("h_nhitfit","",50,-0.5,49.5);
-  h_nhitmax=new TH1F("h_nhitmax","",50,-0.5,49.5);
+  h_nhitfit=new TH1F("h_nhitfit","",80,-0.5,79.5);
+  h_nhitmax=new TH1F("h_nhitmax","",80,-0.5,79.5);
   h_nhitratio=new TH1F("h_nhitratio","",1000,-0.5,1.5);
   h_dca = new TH1F("h_dca","",1000,0.,5.);
   h_phi = new TH1F("h_phi","",1000,-6.28,6.28);
@@ -120,6 +124,20 @@ Int_t StMyAnalysisMaker::Init()
   h_nsigmapip=new TH2F("h_nsigmapip","",200,-5.,5.,200,-5.,5.);
   h_nsigmapik=new TH2F("h_nsigmapik","",200,-5.,5.,200,-5.,5.);
   h_nsigmakp=new TH2F("h_nsigmakp","",200,-5.,5.,200,-5.,5.);
+  TString name_pip, name_pik, name_kp;
+  TString name_pip_p, name_pik_p, name_kp_p;
+  for(int i=0;i<14;i++)
+  {
+    name_pip = Form("m_h_nsigmapip_%d",i);
+    name_pik = Form("m_h_nsigmapik_%d",i);
+    name_kp = Form("m_h_nsigmakp_%d",i);
+    name_pip_p = Form("m_h_nsigmapip, %d < p < %d",StMyAnalysisMaker::p_low[i],StMyAnalysisMaker::p_up[i]);
+    name_pik_p = Form("m_h_nsigmapik, %d < p < %d",StMyAnalysisMaker::p_low[i],StMyAnalysisMaker::p_up[i]);
+    name_kp_p = Form("m_h_nsigmakp, %d < p < %d",StMyAnalysisMaker::p_low[i],StMyAnalysisMaker::p_up[i]);
+    m_h_nsigmapip[i]=new TH2F(name_pip.Data(),name_pip_p.Data(),200,-5.,5.,200,-5.,5.);
+    m_h_nsigmapik[i]=new TH2F(name_pik.Data(),name_pik_p.Data(),200,-5.,5.,200,-5.,5.);
+    m_h_nsigmakp[i]=new TH2F(name_kp.Data(),name_kp_p.Data(),200,-5.,5.,200,-5.,5.);
+  }
   h_nsigmae=new TH1F("hnsigmae","",500,-10.,10.);
 
   h_test_nsigmapi = new TH1D("h_test_nsigmapi", "", 1000, -50.0, 50.0);
@@ -151,12 +169,17 @@ Int_t StMyAnalysisMaker::Finish() {
   h_eta_phi_before->Write();
   h_eta_phi->Write();
 
-  h_pt->Write(), h_eta->Write(), h_nhitfit->Write(),h_nhitmax->Write(), h_nhitratio->Write(), h_dca->Write(),h_phi->Write();
+  h_pt->Write(), h_eta_b->Write(), h_eta->Write(), h_nhitfit->Write(),h_nhitmax->Write(), h_nhitratio->Write(), h_dca->Write(),h_phi->Write();
   h_nsigmapip->Write(), h_nsigmapik->Write(), h_nsigmakp->Write(), h_nsigmae->Write();
 
   h_test_nsigmapi->Write();
   h_test_nsigmapr->Write();
-
+  for(int i=0;i<14;i++)
+  {
+    m_h_nsigmapip[i]->Write();
+    m_h_nsigmapik[i]->Write();
+    m_h_nsigmakp[i]->Write();
+  }
   return kStOK;
 }
 
@@ -222,7 +245,7 @@ Int_t StMyAnalysisMaker::Make() {
       float dca=mPicoTrack->gDCA(vertexPos).Mag();
 
       h_pt->Fill(momentum.Perp());
-      h_eta->Fill(momentum.PseudoRapidity());
+      h_eta_b->Fill(momentum.PseudoRapidity());
       h_nhitfit->Fill(mPicoTrack->nHitsFit());
       h_nhitmax->Fill(mPicoTrack->nHitsMax());
       h_nhitratio->Fill((float)mPicoTrack->nHitsFit()/(float)mPicoTrack->nHitsMax());
@@ -236,7 +259,7 @@ Int_t StMyAnalysisMaker::Make() {
       if(mPicoTrack->nHitsFit()<15) continue;
       if(fabs(dca) > 1.0) continue;
       h_eta_phi->Fill(momentum.Phi(),momentum.PseudoRapidity());
-
+      h_eta->Fill(momentum.PseudoRapidity());
       int tofIndex = mPicoTrack->bTofPidTraitsIndex();
       Int_t   btofMatchFlag =  0;
       Float_t btofYLocal    =  -999;
@@ -269,6 +292,15 @@ Int_t StMyAnalysisMaker::Make() {
       h_nsigmapip->Fill(mPicoTrack->nSigmaPion(),mPicoTrack->nSigmaProton());
       h_nsigmapik->Fill(mPicoTrack->nSigmaPion(),mPicoTrack->nSigmaKaon());
       h_nsigmakp->Fill(mPicoTrack->nSigmaKaon(),mPicoTrack->nSigmaProton());
+      for(int i=0;i<14;i++)
+      {
+        if(momentum.Mag()>=StMyAnalysisMaker::p_low[i] && momentum.Mag()<=StMyAnalysisMaker::p_up[i])
+        {
+          m_h_nsigmapip[i]->Fill(mPicoTrack->nSigmaPion(),mPicoTrack->nSigmaProton());
+          m_h_nsigmapik[i]->Fill(mPicoTrack->nSigmaPion(),mPicoTrack->nSigmaKaon());
+          m_h_nsigmakp[i]->Fill(mPicoTrack->nSigmaKaon(),mPicoTrack->nSigmaProton());
+        }
+      }
       h_nsigmae->Fill(mPicoTrack->nSigmaElectron());
 
       if(momentum.Mag() > 0.2 && momentum.Mag() < 0.4){

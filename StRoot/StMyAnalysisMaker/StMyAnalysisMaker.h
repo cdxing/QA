@@ -43,6 +43,8 @@ class StMyAnalysisMaker : public StMaker {
     virtual void  Clear(Option_t *opt="");
     virtual Int_t Finish();
     int GetRunIndex(int);
+    static Float_t p_low[14];
+    static Float_t p_up[14];
 
   private:
     StPicoDstMaker *mPicoDstMaker;
@@ -62,8 +64,9 @@ class StMyAnalysisMaker : public StMaker {
     TH2F *h_eta_phi_before;
     TH1F *h_counter;
 
-    TH1F *h_pt, *h_eta, *h_nhitfit, *h_nhitmax, *h_nhitratio, *h_dca, *h_phi;
+    TH1F *h_pt, *h_eta_b, *h_eta, *h_nhitfit, *h_nhitmax, *h_nhitratio, *h_dca, *h_phi;
     TH2F *h_nsigmapip, *h_nsigmapik, *h_nsigmakp; TH1F *h_nsigmae;
+    TH2F *m_h_nsigmapip[20], *m_h_nsigmapik[20], *m_h_nsigmakp[20];
 
     TH1D *h_test_nsigmapi;
     TH1D *h_test_nsigmapr;

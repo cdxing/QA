@@ -252,7 +252,7 @@ Int_t StMyAnalysisMaker::Make() {
       h_dca->Fill(dca);
       h_phi->Fill(momentum.Phi());
       h_eta_phi_before->Fill(momentum.Phi(),momentum.PseudoRapidity());
-      if(fabs(momentum.PseudoRapidity()) > 1.0) continue;
+      // if(fabs(momentum.PseudoRapidity()) > 1.0) continue;
       if(momentum.Perp() < 0.15) continue;
       if(momentum.Mag() > 10.0) continue;
       if((Float_t)mPicoTrack->nHitsFit()/(Float_t)mPicoTrack->nHitsMax() < 0.52) continue;

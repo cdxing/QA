@@ -131,9 +131,9 @@ Int_t StMyAnalysisMaker::Init()
     name_pip = Form("m_h_nsigmapip_%d",i);
     name_pik = Form("m_h_nsigmapik_%d",i);
     name_kp = Form("m_h_nsigmakp_%d",i);
-    name_pip_p = Form("m_h_nsigmapip, %d < p < %d",StMyAnalysisMaker::p_low[i],StMyAnalysisMaker::p_up[i]);
-    name_pik_p = Form("m_h_nsigmapik, %d < p < %d",StMyAnalysisMaker::p_low[i],StMyAnalysisMaker::p_up[i]);
-    name_kp_p = Form("m_h_nsigmakp, %d < p < %d",StMyAnalysisMaker::p_low[i],StMyAnalysisMaker::p_up[i]);
+    name_pip_p = Form("m_h_nsigmapip, %1.1f < p < %1.1f",StMyAnalysisMaker::p_low[i],StMyAnalysisMaker::p_up[i]);
+    name_pik_p = Form("m_h_nsigmapik, %1.1f < p < %1.1f",StMyAnalysisMaker::p_low[i],StMyAnalysisMaker::p_up[i]);
+    name_kp_p = Form("m_h_nsigmakp, %1.1f < p < %1.1f",StMyAnalysisMaker::p_low[i],StMyAnalysisMaker::p_up[i]);
     m_h_nsigmapip[i]=new TH2F(name_pip.Data(),name_pip_p.Data(),200,-5.,5.,200,-5.,5.);
     m_h_nsigmapik[i]=new TH2F(name_pik.Data(),name_pik_p.Data(),200,-5.,5.,200,-5.,5.);
     m_h_nsigmakp[i]=new TH2F(name_kp.Data(),name_kp_p.Data(),200,-5.,5.,200,-5.,5.);

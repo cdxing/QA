@@ -67,6 +67,7 @@
 #include "TTreeHelper.h"
 #include "TBranch.h"
 
+#include "../run/badrun.h"
 
 ClassImp(StMyAnalysisMaker)
 
@@ -208,6 +209,10 @@ Int_t StMyAnalysisMaker::Make() {
   //get run index
   int runId = mPicoEvent->runId();
   // Event cut
+  if(int ii=0;ii<44;ii++)
+  {
+    if runId == badrun[ii] return 0;
+  }
   float tofMult = mPicoEvent->btofTrayMultiplicity();
   float tofmatch= mPicoEvent->nBTOFMatch();
   float refMult = mPicoEvent->refMult();

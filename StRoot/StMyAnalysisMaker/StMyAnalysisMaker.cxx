@@ -209,9 +209,9 @@ Int_t StMyAnalysisMaker::Make() {
   //get run index
   int runId = mPicoEvent->runId();
   // Event cut
-  if(int ii=0;ii<44;ii++)
+  for(int ii=0;ii<44;ii++)
   {
-    if runId == badrun[ii] return 0;
+    if( runId == badrun[ii]) return 0;
   }
   float tofMult = mPicoEvent->btofTrayMultiplicity();
   float tofmatch= mPicoEvent->nBTOFMatch();

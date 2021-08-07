@@ -68,6 +68,7 @@
 #include "TBranch.h"
 
 #include "../run/badrun.h"
+#include "../run/run.h"
 
 ClassImp(StMyAnalysisMaker)
 
@@ -213,6 +214,7 @@ Int_t StMyAnalysisMaker::Make() {
   {
     if( runId == badrun[ii]) return 0;
   }
+  if(runId > mid_id) return 0;//first half of the runs, qa check
   float tofMult = mPicoEvent->btofTrayMultiplicity();
   float tofmatch= mPicoEvent->nBTOFMatch();
   float refMult = mPicoEvent->refMult();
